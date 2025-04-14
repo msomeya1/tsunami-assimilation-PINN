@@ -1,0 +1,12 @@
+&params
+gridfile="gridfile.dat"                         ! Grid info (bathymetry & seafloor displacement)
+tgstafn="../../share/Snet133Coast14_JAGURS.txt" ! List of station name
+dt=0.1                                          ! time step (sec)
+tend=3600                                       ! total time (sec)
+itmap=600                                       ! save grd file every 60sec (600*0.1=60)
+init_disp_fault=0                               ! do not read fault parameter file
+tau=0                                           ! rise time = 0
+cf=0                                            ! no friction
+cfl=0
+coriolis=1                                      ! consider coriolis force
+/
