@@ -10,7 +10,8 @@ outdir = "result_Tohoku"
 
 
 ### parameters ###
-Nepoch = 100000
+Nepoch1 = 50000 # Adam
+Nepoch2 = 50000 # LBFGS
 tmax = 20 * 60 # sec. This program assumes tmin = 0
 dt = 10 # sec
 Nt_data = tmax//dt + 1
@@ -200,8 +201,23 @@ NN.apply_output_transform(HardIC_MN)
 
 
 ### train model ###
-dde.optimizers.set_LBFGS_options(maxiter=Nepoch)
 model = dde.Model(PDE, NN)
+
+# Adam
+model.compile(
+    optimizer="adam", lr=0.001, 
+    loss="MSE",
+    loss_weights=lossweights
+)
+losshistory, train_state = model.train(
+    model_save_path=outdir+"/model/model",
+    iterations=Nepoch1,
+    display_every=50
+)
+dde.utils.external.save_loss_history(losshistory, fname=outdir+"/loss_history.txt")
+
+#LBFGS
+dde.optimizers.set_LBFGS_options(maxiter=Nepoch2)
 model.compile(
     optimizer="L-BFGS-B",
     loss="MSE",
@@ -212,7 +228,6 @@ losshistory, train_state = model.train(
     display_every=50,
 )
 dde.utils.external.save_loss_history(losshistory, fname=outdir+"/loss_history.txt")
-
 
 
 ### plot loss history ###
