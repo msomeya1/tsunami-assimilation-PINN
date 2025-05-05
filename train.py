@@ -41,10 +41,16 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import deepxde as dde
 
-import torch 
-device = "cuda" if torch.cuda.is_available() else "cpu"
-print("device = ", device)
-print("# of GPU = ", torch.cuda.device_count())
+import tensorflow.compat.v1 as tf
+tf.disable_eager_execution()
+# device = tf.config.list_physical_devices('GPU')
+# print("Num GPUs:", len(device))
+# import torch 
+# device = "cuda" if torch.cuda.is_available() else "cpu"
+# print("device = ", device)
+# print("# of GPU = ", torch.cuda.device_count())
+
+
 
 os.makedirs(outdir, exist_ok=True)
 os.makedirs(outdir + "/model", exist_ok=True)
@@ -85,6 +91,7 @@ print(Lat_min, Lat_max)
 
 
 delta = np.max([Lon_max-Lon_min, Lat_max-Lat_min])
+print(delta)
 
 Lon_bathy = (np.linspace(Lon_min, Lon_max, Nlon) - Lon_min) / delta
 Lat_bathy = (np.linspace(Lat_min, Lat_max, Nlat) - Lat_min) / delta
@@ -114,8 +121,10 @@ def c2_func(x):
 # output = [eta, M, N]
 def LLW(input, output, c2):
     Lat = Lat_min + delta * input[:, 1:2]
-    cos_Lat = torch.cos(Lat)
-    sin_Lat = torch.sin(Lat)
+    cos_Lat = tf.math.cos(Lat)
+    sin_Lat = tf.math.sin(Lat)
+    # cos_Lat = torch.cos(Lat)
+    # sin_Lat = torch.sin(Lat)
 
     M = output[:, 1:2]
     N = output[:, 2:3]
@@ -193,7 +202,8 @@ def HardIC_MN(input, output):
     eta = output[:, 0:1]
     M = output[:, 1:2]
     N = output[:, 2:3]
-    return torch.cat((eta, t * M, t * N), dim=1)
+    return tf.concat((eta, t * M, t * N), axis=1)
+    # return torch.cat((eta, t * M, t * N), dim=1)
 
 NN.apply_output_transform(HardIC_MN)
 
@@ -253,13 +263,6 @@ plt.savefig(outdir+"/loss_history.png", bbox_inches='tight')
 
 
 
-
-
-### caculate VR_OBPGs ###
-final_data_loss = data_loss[-1]
-eta_data_squared = np.linalg.norm(eta_data, ord=2)**2 / len(eta_data)
-VR = 100*(1-final_data_loss/eta_data_squared)
-print("VR of OBPG waveforms (%) =", VR)
 
 
 

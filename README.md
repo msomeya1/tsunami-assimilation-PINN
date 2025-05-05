@@ -1,6 +1,6 @@
 Here we explain how to reproduce the synthetic data test described in Section 3 of the paper.
 
-You need `GMT` and the following Python libraries: `GeoPandas`, `japanmap`, `Shapely`, `NumPy`, `Matplotlib`, `ObsPy`, `SciPy`, `netCDF4`, `seaborn`, `DeepXDE`, `PyTorch`, `PyGMT`.
+You need `GMT` and the following Python libraries: `GeoPandas`, `japanmap`, `Shapely`, `NumPy`, `Matplotlib`, `ObsPy`, `SciPy`, `netCDF4`, `seaborn`, `DeepXDE`, `Tensorflow`, `PyGMT`.
 Also, please install `JAGURS`. See the `JAGURS` manual for details.
 
 # Preparation
@@ -18,7 +18,7 @@ If you use actual data (S-net, N-net, etc.), please do the similar process as `p
 
 
 # PINN training
-`DeepXDE` supports several backends. Here we use `PyTorch`, but you can also choose `TensorFlow (v1)` or `TensorFlow (v2)`. See the `DeepXDE` documentation for details.
+`DeepXDE` supports several backends. Here we use `TensorFlow (v1)`, but you can also choose `TensorFlow (v2)` or `PyTorch`. See the `DeepXDE` documentation for details.
 - Run `train.py`. (see `run_PINN.sh`).
 - Run `postprocess1.ipynb` to create the figures of the wavefield estimation.
 - Run `run_JAGURS2.sh` at `result_Tohoku/pred_from_eta0` (coastal tsunami prediction from estimated source).
